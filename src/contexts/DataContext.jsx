@@ -31,12 +31,14 @@ export function DataProvider({ children }) {
         });
       } catch (error) {
         console.error('Error loading saved wallets:', error);
-        // Fallback to demo data
-        loadDemoData();
+        // Start with empty state for first-time users
+        setWallets([]);
+        setTransactions([]);
       }
     } else {
-      // Load demo data for first-time users
-      loadDemoData();
+      // Start with empty state for first-time users - no demo data
+      setWallets([]);
+      setTransactions([]);
     }
   }, []);
 

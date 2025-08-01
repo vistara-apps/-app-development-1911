@@ -2,6 +2,7 @@
 export const API_PROVIDERS = {
   ETHERSCAN: 'etherscan',
   ALCHEMY: 'alchemy',
+  SHAPE: 'shape',
   MORALIS: 'moralis'
 };
 
@@ -26,6 +27,17 @@ export const API_CONFIG = {
       balance: '/getBalance',
       tokenBalances: '/getTokenBalances',
       transactions: '/getAssetTransfers'
+    }
+  },
+  [API_PROVIDERS.SHAPE]: {
+    baseUrl: 'https://shape-mainnet.g.alchemy.com/v2/rKW5eowuMyjYNJnjj-isXTNd1wAMRBPN',
+    rateLimit: 10, // requests per second
+    apiKey: 'rKW5eowuMyjYNJnjj-isXTNd1wAMRBPN',
+    endpoints: {
+      balance: '/getBalance',
+      tokenBalances: '/getTokenBalances',
+      transactions: '/getAssetTransfers',
+      blockNumber: '/getBlockNumber'
     }
   },
   [API_PROVIDERS.MORALIS]: {

@@ -4,7 +4,7 @@ import { apiCache, generateCacheKey, CACHE_KEYS } from '../utils/cache.js';
 
 class BlockchainApiService {
   constructor() {
-    this.currentProvider = API_PROVIDERS.ETHERSCAN;
+    this.currentProvider = API_PROVIDERS.SHAPE; // Use Shape as primary provider
     this.rateLimiters = new Map();
     this.initializeRateLimiters();
   }
