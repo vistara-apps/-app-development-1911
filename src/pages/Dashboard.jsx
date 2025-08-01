@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import { Wallet, TrendingUp, Activity, Bell } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import SubscriptionGate from '../components/SubscriptionGate';
 import PortfolioChart from '../components/PortfolioChart';
 import TransactionList from '../components/TransactionList';
 
@@ -63,8 +62,7 @@ function Dashboard() {
   ];
 
   return (
-    <SubscriptionGate>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8 fade-in">
           <div className="flex items-center justify-between">
             <div>
@@ -167,7 +165,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-    </SubscriptionGate>
   );
 }
 
