@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import { Plus, Search, Wallet } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import SubscriptionGate from '../components/SubscriptionGate';
 import WalletCard from '../components/WalletCard';
 
 function WalletList() {
@@ -34,8 +33,7 @@ function WalletList() {
   };
 
   return (
-    <SubscriptionGate>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">My Wallets</h1>
@@ -195,7 +193,6 @@ function WalletList() {
           </div>
         )}
       </div>
-    </SubscriptionGate>
   );
 }
 
