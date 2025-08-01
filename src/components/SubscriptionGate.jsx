@@ -8,9 +8,15 @@ function SubscriptionGate({ children }) {
   const { createSession } = usePaymentContext();
   const [loading, setLoading] = useState(false);
 
+  // For now, allow free access to all features (freemium model)
+  return children;
+
+  // Uncomment below to re-enable subscription gate
+  /*
   if (isSubscribed) {
     return children;
   }
+  */
 
   const handleSubscribe = async () => {
     setLoading(true);

@@ -1,18 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Wallet, TrendingUp, Activity, Bell } from 'lucide-react';
+import { Wallet, TrendingUp, Activity, Bell, RefreshCw } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
+import { useNotifications } from '../contexts/NotificationContext';
+import SubscriptionGate from '../components/SubscriptionGate';
 import PortfolioChart from '../components/PortfolioChart';
 import TransactionList from '../components/TransactionList';
 
 function Dashboard() {
   const { user } = useAuth();
-  const { wallets, transactions } = useData();
+  const { wallets, transactions, loading, refreshAllWallets, getTotalPortfolioValue } = useData();
+  const { 
+    isMonitoring, 
+    startMonitoring, 
+    monitorWallet, 
+    notifications, 
+    unreadCount 
+  } = useNotifications();
 
   if (!user) {
     return <Navigate to="/" replace />;
   }
+
+  // Start monitoring wallets when dashboard loads
+  useEffect(() => {
+    if (wallets.length > 0 && !isMonitoring) {
+      // Add all wallets to monitoring
+      wallets.forEach(wallet => {
+        if (!wallet.isDemo) {
+          monitorWallet(wallet.address);
+        }
+      });
+      startMonitoring();
+    }
+  }, [wallets, isMonitoring, monitorWallet, startMonitoring]);
 
   const totalPortfolioValue = wallets.reduce((total, wallet) => {
     return total + (wallet.tokenBalances?.reduce((sum, token) => sum + token.value, 0) || 0);
@@ -52,17 +74,18 @@ function Dashboard() {
     },
     {
       title: 'Active Alerts',
-      value: '3',
+      value: unreadCount.toString(),
       icon: <Bell className="h-6 w-6" />,
       color: 'text-crypto-warning',
       bgColor: 'bg-orange-50',
-      change: 'New',
-      changeColor: 'text-crypto-warning'
+      change: unreadCount > 0 ? 'New' : 'None',
+      changeColor: unreadCount > 0 ? 'text-crypto-warning' : 'text-gray-500'
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <SubscriptionGate>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8 fade-in">
           <div className="flex items-center justify-between">
             <div>
@@ -72,13 +95,23 @@ function Dashboard() {
               <p className="text-gray-600">Here's what's happening with your crypto portfolio today</p>
             </div>
             <div className="hidden md:flex items-center space-x-3">
-              <div className="flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                Live Data
+              <div className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
+                isMonitoring 
+                  ? 'bg-green-50 text-green-700' 
+                  : 'bg-gray-50 text-gray-700'
+              }`}>
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  isMonitoring ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+                }`}></div>
+                {isMonitoring ? 'Live Monitoring' : 'Monitoring Off'}
               </div>
-              <button className="btn-ghost">
-                <Bell className="h-4 w-4 mr-2" />
-                Alerts
+              <button 
+                onClick={refreshAllWallets}
+                disabled={loading}
+                className="btn-ghost"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
               </button>
             </div>
           </div>
@@ -165,6 +198,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
+    </SubscriptionGate>
   );
 }
 
