@@ -28,48 +28,79 @@ function Dashboard() {
       title: 'Total Portfolio Value',
       value: `$${totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: <TrendingUp className="h-6 w-6" />,
-      color: 'text-green-600'
+      color: 'text-crypto-success',
+      bgColor: 'bg-green-50',
+      change: '+12.5%',
+      changeColor: 'text-crypto-success'
     },
     {
       title: 'Tracked Wallets',
       value: wallets.length.toString(),
       icon: <Wallet className="h-6 w-6" />,
-      color: 'text-blue-600'
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-50',
+      change: `+${wallets.length > 0 ? '1' : '0'}`,
+      changeColor: 'text-primary-600'
     },
     {
       title: 'Recent Transactions',
       value: transactions.length.toString(),
       icon: <Activity className="h-6 w-6" />,
-      color: 'text-purple-600'
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      change: '+24',
+      changeColor: 'text-purple-600'
     },
     {
       title: 'Active Alerts',
       value: '3',
       icon: <Bell className="h-6 w-6" />,
-      color: 'text-orange-600'
+      color: 'text-crypto-warning',
+      bgColor: 'bg-orange-50',
+      change: 'New',
+      changeColor: 'text-crypto-warning'
     }
   ];
 
   return (
     <SubscriptionGate>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Overview of your crypto portfolio and recent activity</p>
+        <div className="mb-8 fade-in">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Welcome back! 👋
+              </h1>
+              <p className="text-gray-600">Here's what's happening with your crypto portfolio today</p>
+            </div>
+            <div className="hidden md:flex items-center space-x-3">
+              <div className="flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                Live Data
+              </div>
+              <button className="btn-ghost">
+                <Bell className="h-4 w-4 mr-2" />
+                Alerts
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
-            <div key={index} className="card">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="text-2xl font-semibold text-gray-900 mt-1">{stat.value}</p>
-                </div>
-                <div className={stat.color}>
+            <div key={index} className="stat-card hover-lift slide-up" style={{animationDelay: `${index * 100}ms`}}>
+              <div className="flex items-center justify-between mb-4">
+                <div className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center ${stat.color}`}>
                   {stat.icon}
                 </div>
+                <div className={`text-sm font-medium px-2 py-1 rounded-full ${stat.changeColor} bg-opacity-10`} style={{backgroundColor: `${stat.changeColor.replace('text-', 'bg-').replace('-600', '-100').replace('-success', '-green-100').replace('-warning', '-orange-100')}`}}>
+                  {stat.change}
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
             </div>
           ))}
